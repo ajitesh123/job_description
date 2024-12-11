@@ -1,10 +1,10 @@
 # JobDescription Crew
 
-Welcome to the JobDescription Crew project, powered by [crewAI](https://crewai.com). This template is designed to help you set up a multi-agent AI system with ease, leveraging the powerful and flexible framework provided by crewAI. Our goal is to enable your agents to collaborate effectively on complex tasks, maximizing their collective intelligence and capabilities.
+Welcome to the JobDescription Crew project, powered by [crewAI](https://crewai.com). This project helps you generate professional job postings using a multi-agent AI system that researches, writes, and reviews job descriptions while considering company culture and industry requirements.
 
 ## Installation
 
-Ensure you have Python >=3.10 <=3.13 installed on your system. This project uses [UV](https://docs.astral.sh/uv/) for dependency management and package handling, offering a seamless setup and execution experience.
+Ensure you have Python >=3.10 <=3.13 installed on your system. This project uses [UV](https://docs.astral.sh/uv/) for dependency management and package handling.
 
 First, if you haven't already, install uv:
 
@@ -18,30 +18,48 @@ Next, navigate to your project directory and install the dependencies:
 ```bash
 crewai install
 ```
-### Customizing
 
-**Add your `OPENAI_API_KEY` into the `.env` file**
+### Configuration
 
-- Modify `src/job_description/config/agents.yaml` to define your agents
-- Modify `src/job_description/config/tasks.yaml` to define your tasks
-- Modify `src/job_description/crew.py` to add your own logic, tools and specific args
-- Modify `src/job_description/main.py` to add custom inputs for your agents and tasks
+1. Create a `.env` file and add your API keys:
+```
+OPENAI_API_KEY=your_key_here
+SERPER_API_KEY=your_key_here
+```
+
+2. Customize the configuration files:
+- Modify `src/job_description/config/agents.yaml` to configure the research, writer, and review agents
+- Modify `src/job_description/config/tasks.yaml` to adjust the tasks for company research, role requirements, job posting drafting, and review
+- Modify `src/job_description/crew.py` to customize agent tools and task configurations
+- Modify `src/job_description/main.py` to update the input parameters for your job posting
 
 ## Running the Project
 
-To kickstart your crew of AI agents and begin task execution, run this from the root folder of your project:
+To generate a job posting, run this from the root folder:
 
 ```bash
 $ crewai run
 ```
 
-This command initializes the job_description Crew, assembling the agents and assigning them tasks as defined in your configuration.
-
-This example, unmodified, will run the create a `report.md` file with the output of a research on LLMs in the root folder.
+The default configuration expects these inputs:
+- company_domain: Your company's career website
+- company_description: A brief description of your company
+- hiring_needs: The position title and basic requirements
+- specific_benefits: Key benefits offered for the position
 
 ## Understanding Your Crew
 
-The job_description Crew is composed of multiple AI agents, each with unique roles, goals, and tools. These agents collaborate on a series of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to achieve complex objectives. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew.
+The JobDescription Crew consists of three specialized agents:
+1. Research Agent: Investigates company culture and role requirements
+2. Writer Agent: Drafts the initial job posting
+3. Review Agent: Reviews and refines the final posting
+
+These agents work sequentially through five main tasks:
+- Research company culture
+- Analyze role requirements
+- Draft the job posting
+- Review and edit the posting
+- Conduct industry analysis
 
 ## Support
 
