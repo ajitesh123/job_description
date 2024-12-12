@@ -8,8 +8,6 @@ load_dotenv()
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 SERPER_API_KEY = os.getenv('SERPER_API_KEY')
 
-print(OPENAI_API_KEY)
-
 def run():
     # Replace with your inputs, it will automatically interpolate any tasks and agents information
     inputs = {
@@ -19,3 +17,6 @@ def run():
         'specific_benefits':'Weekly Pay, Employee Meals, healthcare',
     }
     JobPostingCrew().crew().kickoff(inputs=inputs)
+
+if __name__ == "__main__":
+    run()
