@@ -7,90 +7,68 @@ from crewai_tools import SerperDevTool, ScrapeWebsiteTool, WebsiteSearchTool, Fi
 from pydantic import BaseModel, Field
 
 web_search_tool = WebsiteSearchTool()
-seper_dev_tool = SerperDevTool()
-file_read_tool = FileReadTool(
+serper_search_tool = SerperDevTool()
+job_description_reader = FileReadTool(
     file_path='job_description_example.md',
     description='A tool to read the job description example file.'
 )
 
-class ResearchRoleRequirements(BaseModel):
-    """Research role requirements model"""
+class JobRequirementsSpec(BaseModel):
+    """Specification for job requirements"""
     skills: List[str] = Field(..., description="List of recommended skills for the ideal candidate aligned with the company's culture, ongoing projects, and the specific role's requirements.")
     experience: List[str] = Field(..., description="List of recommended experience for the ideal candidate aligned with the company's culture, ongoing projects, and the specific role's requirements.")
     qualities: List[str] = Field(..., description="List of recommended qualities for the ideal candidate aligned with the company's culture, ongoing projects, and the specific role's requirements.")
 
 @CrewBase
 class JobPostingCrew:
-    """JobPosting crew"""
+    """Crew for creating professional job postings"""
     agents_config = 'config/agents.yaml'
     tasks_config = 'config/tasks.yaml'
 
     @agent
-    def research_agent(self) -> Agent:
+    def company_researcher(self) -> Agent:
         return Agent(
-            config=self.agents_config['research_agent'],
-            tools=[web_search_tool, seper_dev_tool],
+            config=self.agents_config['company_researcher'],
+            tools=[web_search_tool, serper_search_tool],
             verbose=True
         )
     
     @agent
-    def writer_agent(self) -> Agent:
+    def content_creator(self) -> Agent:
         return Agent(
-            config=self.agents_config['writer_agent'],
-            tools=[web_search_tool, seper_dev_tool, file_read_tool],
-            verbose=True
-        )
-    
-    @agent
-    def review_agent(self) -> Agent:
-        return Agent(
-            config=self.agents_config['review_agent'],
-            tools=[web_search_tool, seper_dev_tool, file_read_tool],
+            config=self.agents_config['content_creator'],
+            tools=[web_search_tool, serper_search_tool, job_description_reader],
             verbose=True
         )
     
     @task
-    def research_company_culture_task(self) -> Task:
+    def analyze_company_profile(self) -> Task:
         return Task(
-            config=self.tasks_config['research_company_culture_task'],
-            agent=self.research_agent()
+            config=self.tasks_config['analyze_company_profile'],
+            agent=self.company_researcher()
         )
 
     @task
-    def research_role_requirements_task(self) -> Task:
+    def define_job_requirements(self) -> Task:
         return Task(
-            config=self.tasks_config['research_role_requirements_task'],
-            agent=self.research_agent(),
-            output_json=ResearchRoleRequirements
+            config=self.tasks_config['define_job_requirements'],
+            agent=self.company_researcher(),
+            output_json=JobRequirementsSpec
         )
 
     @task
-    def draft_job_posting_task(self) -> Task:
+    def write_job_posting(self) -> Task:
         return Task(
-            config=self.tasks_config['draft_job_posting_task'],
-            agent=self.writer_agent()
-        )
-
-    @task
-    def review_and_edit_job_posting_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['review_and_edit_job_posting_task'],
-            agent=self.review_agent()
-        )
-
-    @task
-    def industry_analysis_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['industry_analysis_task'],
-            agent=self.research_agent()
+            config=self.tasks_config['write_job_posting'],
+            agent=self.content_creator()
         )
 
     @crew
-    def crew(self) -> Crew:
-        """Creates the JobPostingCrew"""
+    def job_posting_team(self) -> Crew:
+        """Creates the job posting creation team"""
         return Crew(
-            agents=self.agents,  # Automatically created by the @agent decorator
-            tasks=self.tasks,  # Automatically created by the @task decorator
+            agents=self.agents,
+            tasks=self.tasks,
             process=Process.sequential,
             verbose=True,
         )

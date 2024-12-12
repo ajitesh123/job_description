@@ -1,22 +1,37 @@
 import sys
 import os
+from typing import Dict
 from src.job_description.crew import JobPostingCrew
 from dotenv import load_dotenv
 
-load_dotenv()
+def load_environment():
+    """Load environment variables required for the application"""
+    load_dotenv()
+    
+    required_vars = ['OPENAI_API_KEY', 'SERPER_API_KEY']
+    missing_vars = [var for var in required_vars if not os.getenv(var)]
+    
+    if missing_vars:
+        raise EnvironmentError(f"Missing required environment variables: {', '.join(missing_vars)}")
 
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-SERPER_API_KEY = os.getenv('SERPER_API_KEY')
-
+def get_job_posting_inputs() -> Dict[str, str]:
+    """
+    Define the inputs for job posting creation.
+    Customize these values based on your specific job posting needs.
+    """
+    return {
+        'company_domain': 'getarchieai.com',
+        'company_description': (
+            "Archie AI: Coding Automation platform for developers"
+        ),
+        'hiring_needs': 'Software Engineer, for a coding automation platform',
+        'specific_benefits': 'Monthly Salary, Health Insurance, 401k',
+    }
 def run():
     # Replace with your inputs, it will automatically interpolate any tasks and agents information
-    inputs = {
-        'company_domain':'careers.wbd.com',
-        'company_description': "Warner Bros. Discovery is a premier global media and entertainment company, offering audiences the world’s most differentiated and complete portfolio of content, brands and franchises across television, film, sports, news, streaming and gaming. We're home to the world’s best storytellers, creating world-class products for consumers",
-        'hiring_needs': 'Production Assistant, for a TV production set in Los Angeles in June 2025',
-        'specific_benefits':'Weekly Pay, Employee Meals, healthcare',
-    }
-    JobPostingCrew().crew().kickoff(inputs=inputs)
+    inputs =get_job_posting_inputs()
+    JobPostingCrew().job_posting_team().kickoff(inputs=inputs)
 
 if __name__ == "__main__":
+    load_environment()
     run()
