@@ -35,3 +35,9 @@ def run():
 if __name__ == "__main__":
     load_environment()
     run()
+
+
+"""
+Note: No way for me understand direclty how prompt is being constructed. As a result ot's hard to remove [Company Name] in final output
+
+"""
