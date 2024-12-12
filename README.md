@@ -2,6 +2,11 @@
 
 Welcome to the JobDescription Crew project, powered by [crewAI](https://crewai.com). This project helps you generate professional job postings using a multi-agent AI system that researches, writes, and reviews job descriptions while considering company culture and industry requirements.
 
+Note: This is a fork of the original job posting generation project [crewAI](https://github.com/crewAIInc/crewAI-examples/tree/main/job-posting) project. I picked this one as it has a good example of how to use crewAI and HR is domain I'm interested in to simplify. 
+
+I've also added a streamlit app to make it easier to use the API. 
+
+
 ## Installation
 
 Ensure you have Python >=3.10 <=3.13 installed on your system. This project uses [UV](https://docs.astral.sh/uv/) for dependency management and package handling.
@@ -39,6 +44,12 @@ To generate a job posting, run this from the root folder:
 
 ```bash
 $ crewai run
+```
+
+To run the streamlit app, run this from the root folder:
+
+```bash
+$ streamlit run src/job_description/streamlit_app.py
 ```
 
 The default configuration expects these inputs:
