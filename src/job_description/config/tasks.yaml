@@ -1,33 +1,28 @@
 analyze_company_profile:
   description: >
     Research and analyze company profile using website, domain {company_domain},
-    and description {company_description}. Create a comprehensive overview of:
-    company culture, values, mission, market position, industry trends,
-    challenges, and opportunities. Highlight unique selling points and
+    and company name {company_name}. Highlight unique selling points and
     achievements that would attract potential candidates.
   expected_output: >
-    A strategic analysis report containing: 1) Company culture and values assessment
-    2) Industry position and market trends 3) Key differentiators and achievements
-    4) Recommendations for positioning the role in the market.
+    A report containing: 
+    1) Company culture and values assessment
+    2) Key differentiators and achievements
+    3) Recommendations for positioning the role in the market.
 
 define_job_requirements:
   description: >
-    Based on hiring manager specifications {hiring_needs} and company analysis,
+    Based on hiring manager {role} specifications and company analysis,
     create a detailed profile of the ideal candidate. Consider technical skills,
     experience level, cultural fit, and growth potential within the context of
     company goals and industry demands.
   expected_output: >
-    A structured JSON specification detailing required skills, experience levels,
-    and personal qualities, aligned with both immediate role needs and long-term
-    company objectives.
+    A list of requirements for the ideal candidate.
 
 write_job_posting:
   description: >
-    Transform company insights and role requirements into an engaging job posting.
-    Create a compelling narrative that includes: role impact, growth opportunities,
-    day-to-day responsibilities, and required qualifications. Incorporate company
-    culture elements and benefits ({specific_benefits}) to create a standout posting.
+    Turn the company research and role requirements into a job posting.
+    Incorporate benefits ({specific_benefits}).
   expected_output: >
-    A polished job posting featuring: attention-grabbing introduction,
-    clear role overview, specific responsibilities, qualification requirements,
-    and compelling company value proposition. Ready for immediate publication.
+    A ready-to-publish job posting for {role} at {company_name} and domain {company_domain}.
+  output_file: >
+    job_posting.md

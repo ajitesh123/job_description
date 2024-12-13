@@ -1,25 +1,35 @@
 import streamlit as st
 from src.job_description.crew import JobPostingCrew
 from typing import Dict
+import os
 
 def get_job_posting(inputs: Dict[str, str]) -> str:
     """Generate job posting using CrewAI"""
     try:
-        result = JobPostingCrew().job_posting_team().kickoff(inputs=inputs)
-        return result
+        # Execute crew and get the output file path
+        JobPostingCrew().job_posting_team().kickoff(inputs=inputs)
+        
+        # Read the generated output file
+        output_path = 'output/job_posting.md'
+        if os.path.exists(output_path):
+            with open(output_path, 'r') as f:
+                return f.read()
+        else:
+            raise FileNotFoundError("Job posting output file not found")
     except Exception as e:
         st.error(f"Error generating job posting: {str(e)}")
         return None
 
 def main():
     st.set_page_config(
-        page_title="Job Description Generator",
-        page_icon="📝",
-        layout="wide"
+        page_title="AI Job Description Generator",
+        page_icon="🤖",
+        layout="centered",
     )
 
-    st.title("🤖 AI Job Description Generator")
-    st.markdown("Generate professional job descriptions using AI")
+    st.title("AI Job Description Generator", )
+    st.markdown("### Generate professional job descriptions using AI")
+    st.markdown("---")
 
     # Input form
     with st.form("job_posting_form"):
@@ -28,16 +38,16 @@ def main():
             placeholder="e.g., example.com"
         )
         
-        company_description = st.text_area(
-            "Company Description",
-            placeholder="Brief description of your company"
+        company_name = st.text_input(
+            "Company Name",
+            placeholder="e.g., Archie AI"
         )
         
-        hiring_needs = st.text_input(
+        role = st.text_input(
             "Hiring Position",
-            placeholder="e.g., Senior Software Engineer"
+            placeholder="e.g., Software Engineer"
         )
-        
+
         specific_benefits = st.text_area(
             "Benefits",
             placeholder="List the benefits offered (optional)"
@@ -47,15 +57,15 @@ def main():
 
     # Generate job description when form is submitted
     if submit_button:
-        if not all([company_domain, company_description, hiring_needs]):
+        if not all([company_domain, company_name, role]):
             st.error("Please fill in all required fields")
             return
 
         with st.spinner("Generating job description..."):
             inputs = {
                 'company_domain': company_domain,
-                'company_description': company_description,
-                'hiring_needs': hiring_needs,
+                'company_name': company_name,
+                'role': role,
                 'specific_benefits': specific_benefits or '',
             }
             
@@ -65,6 +75,14 @@ def main():
                 st.success("Job description generated successfully!")
                 st.markdown("### Generated Job Description")
                 st.markdown(result)
+                
+                # Add download button
+                st.download_button(
+                    label="Download Job Description",
+                    data=result,
+                    file_name="job_description.md",
+                    mime="text/markdown"
+                )
                 
                 # Add copy button
                 st.button(

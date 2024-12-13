@@ -21,10 +21,8 @@ def get_job_posting_inputs() -> Dict[str, str]:
     """
     return {
         'company_domain': 'getarchieai.com',
-        'company_description': (
-            "Archie AI: Coding Automation platform for developers"
-        ),
-        'hiring_needs': 'Software Engineer, for a coding automation platform',
+        'company_name': 'Archie AI',
+        'role': 'Software Engineer',
         'specific_benefits': 'Monthly Salary, Health Insurance, 401k',
     }
 def run():
